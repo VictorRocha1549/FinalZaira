@@ -29,6 +29,18 @@ public class Banco {
         return null;
     }
 
+    //Metodo de eliminar corregido
+    public boolean eliminarCliente(int idCliente, String contrasena) {
+        Cliente cliente = clientes.get(idCliente);
+        if (cliente != null && cliente.verificarContrasena(contrasena)) {
+            clientes.remove(idCliente);
+            cuentas.values().removeIf(cuenta -> cuenta.getNumeroCliente() == idCliente);
+            return true;
+        }
+        return false;
+    }
+    
+/* Este metodo no sirve, no se ejecuta
     public boolean eliminarCliente(int idCliente, String contrasena) {
         Cliente cliente = obtenerCliente(idCliente);
         if (cliente != null && cliente.getContrasena().equals(contrasena)) {
@@ -37,7 +49,7 @@ public class Banco {
         }
         return false;  // Indica que la eliminación falló
     }
-    
+  */  
     
 
     // Método para obtener la cuenta de un cliente específico
