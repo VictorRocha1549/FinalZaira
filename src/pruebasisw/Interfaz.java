@@ -241,6 +241,59 @@ public class Interfaz extends JFrame {
         registroDialog.setVisible(true);
     }
 
+    private void abrirVentanaEliminarUsuario() {
+        JDialog eliminarDialog = new JDialog(this, "Eliminar Usuario", true);
+        eliminarDialog.setSize(300, 200);
+        eliminarDialog.setLayout(null);
+    
+        JLabel etiquetaIDCliente = new JLabel("ID Cliente:");
+        etiquetaIDCliente.setBounds(30, 30, 80, 25);
+        eliminarDialog.add(etiquetaIDCliente);
+    
+        JTextField campoIDCliente = new JTextField();
+        campoIDCliente.setBounds(120, 30, 150, 25);
+        eliminarDialog.add(campoIDCliente);
+    
+        JLabel etiquetaContrasena = new JLabel("Contraseña:");
+        etiquetaContrasena.setBounds(30, 70, 80, 25);
+        eliminarDialog.add(etiquetaContrasena);
+    
+        JPasswordField campoContrasenaEliminar = new JPasswordField();
+        campoContrasenaEliminar.setBounds(120, 70, 150, 25);
+        eliminarDialog.add(campoContrasenaEliminar);
+    
+        JTextArea areaResultadoEliminar = new JTextArea();
+        areaResultadoEliminar.setBounds(30, 130, 240, 50);
+        areaResultadoEliminar.setEditable(false);
+        eliminarDialog.add(areaResultadoEliminar);
+    
+        JButton botonEliminar = new JButton("Eliminar");
+        botonEliminar.setBounds(30, 110, 240, 25);
+        eliminarDialog.add(botonEliminar);
+    
+        botonEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    int idCliente = Integer.parseInt(campoIDCliente.getText());
+                    String contrasena = new String(campoContrasenaEliminar.getPassword());
+    
+                    if (banco.eliminarCliente(idCliente, contrasena)) {
+                        areaResultadoEliminar.setText("Cliente eliminado exitosamente.");
+                    } else {
+                        areaResultadoEliminar.setText("ID o contraseña incorrectos.");
+                    }
+                } catch (NumberFormatException ex) {
+                    areaResultadoEliminar.setText("ID Cliente inválido.");
+                }
+            }
+        });
+    
+        eliminarDialog.setVisible(true);
+    }
+    
+
+/* No funciona el metodo de eliminar cliente
     // Método para abrir el diálogo de eliminación de usuario
     private void abrirVentanaEliminarUsuario() {
         JDialog eliminarDialog = new JDialog(this, "Eliminar Usuario", true);
@@ -301,6 +354,7 @@ public class Interfaz extends JFrame {
 
         eliminarDialog.setVisible(true);
     }
+*/
 
     public static void main(String[] args) {
         // Crear el banco y algunos clientes y cuentas de prueba
