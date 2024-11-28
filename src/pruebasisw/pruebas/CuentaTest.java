@@ -1,5 +1,8 @@
 package pruebasisw.pruebas;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Assert;
 import org.junit.Test;
 import pruebasisw.Cuenta;
@@ -39,5 +42,21 @@ public class CuentaTest {
 
         // Verificación
         Assert.assertEquals("El saldo no debería cambiar con un depósito negativo", 500.0, cuenta.getSaldo(), 0.001);
+    }
+
+    @Test
+    public void testRetirarVerdadero(){
+        Cuenta cuenta = new Cuenta(1, 1, 500);
+        boolean resultado = cuenta.retirar(200);
+        System.out.println(cuenta);
+        assertTrue(resultado);
+    }
+
+    @Test
+    public void testRetirarFalso(){
+        Cuenta cuenta = new Cuenta(1, 1, 500);
+        boolean resultado = cuenta.retirar(700);
+        System.out.println(cuenta);
+        assertFalse(resultado);
     }
 }
