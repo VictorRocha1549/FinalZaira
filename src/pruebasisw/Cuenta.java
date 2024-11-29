@@ -1,11 +1,13 @@
 package pruebasisw;
 
+import java.math.BigDecimal;
+
 public class Cuenta {
     private int numeroCuenta;
     private int numeroCliente;
-    private double saldo;
+    private BigDecimal saldo;
 
-    public Cuenta(int numeroCuenta, int numeroCliente, double saldoInicial) {
+    public Cuenta(int numeroCuenta, int numeroCliente, BigDecimal saldoInicial) {
         this.numeroCuenta = numeroCuenta;
         this.numeroCliente = numeroCliente;
         this.saldo = saldoInicial;
@@ -19,19 +21,19 @@ public class Cuenta {
         return numeroCliente;
     }
 
-    public double getSaldo() {
+    public BigDecimal getSaldo() {
         return saldo;
     }
 
-    public void depositar(double cantidad) {
-        if (cantidad > 0) {
-            saldo += cantidad;
+    public void depositar(BigDecimal cantidad) {
+        if (cantidad.compareTo(BigDecimal.ZERO) > 0) {
+            saldo = saldo.add(cantidad);
         }
     }
 
-    public boolean retirar(double cantidad) {
-        if (cantidad > 0 && cantidad <= saldo) {
-            saldo -= cantidad;
+    public boolean retirar(BigDecimal cantidad) {
+        if (cantidad.compareTo(BigDecimal.ZERO) > 0 && cantidad.compareTo(saldo) <= 0) {
+            saldo = saldo.subtract(cantidad);
             return true;
         }
         return false;
