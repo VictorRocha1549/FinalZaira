@@ -175,8 +175,12 @@ public class Interfaz extends JFrame {
             if (cuenta != null) {
                 if (cuenta.retirar(monto)) {
                     areaResultados.setText("Retiro exitoso. Nuevo saldo: " + cuenta.getSaldo());
-                } else {
+                } else if(monto.compareTo(cuenta.getSaldo())>0){
                     areaResultados.setText("Saldo insuficiente.");
+                }else if(monto.compareTo(BigDecimal.ZERO)<0){
+                    areaResultados.setText("El monto debe de ser positivo");
+                }else{
+                    areaResultados.setText("Favor de ingresar un monto a retirar");
                 }
             } else {
                 areaResultados.setText("Cuenta no encontrada.");
