@@ -3,6 +3,7 @@ package pruebasisw;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.BigDecimal;
 
 public class Interfaz extends JFrame {
     private Banco banco;
@@ -143,7 +144,7 @@ public class Interfaz extends JFrame {
 
         try {
             int numeroCliente = Integer.parseInt(numeroClienteStr);
-            double monto = Double.parseDouble(montoStr);
+            BigDecimal monto =new BigDecimal(montoStr.replaceAll(",", ""));
 
             Cuenta cuenta = banco.obtenerCuenta(numeroCliente);
             if (cuenta != null) {
@@ -168,7 +169,7 @@ public class Interfaz extends JFrame {
 
         try {
             int numeroCliente = Integer.parseInt(numeroClienteStr);
-            double monto = Double.parseDouble(montoStr);
+            BigDecimal monto =new BigDecimal(montoStr.replaceAll(",", ""));
 
             Cuenta cuenta = banco.obtenerCuenta(numeroCliente);
             if (cuenta != null) {
@@ -231,7 +232,7 @@ public class Interfaz extends JFrame {
                 int nuevoIdCliente = banco.generarNuevoIdCliente();
                 Cliente nuevoCliente = new Cliente(nuevoIdCliente, nombre, contrasena);
                 int nuevoIdCuenta = banco.generarNuevoIdCuenta();
-                Cuenta nuevaCuenta = new Cuenta(nuevoIdCuenta, nuevoIdCliente, 0.0);
+                Cuenta nuevaCuenta = new Cuenta(nuevoIdCuenta, nuevoIdCliente, new BigDecimal("0.0"));
 
                 banco.registrarCliente(nuevoCliente, nuevaCuenta);
                 areaResultadoRegistro.setText("Cliente registrado con ID: " + nuevoIdCliente);
@@ -362,7 +363,7 @@ public class Interfaz extends JFrame {
         int clienteId1 = banco.generarNuevoIdCliente();
         Cliente cliente1 = new Cliente(clienteId1, "Juan Pérez", "1234");
         int cuentaId1 = banco.generarNuevoIdCuenta();
-        Cuenta cuenta1 = new Cuenta(cuentaId1, clienteId1, 500.0);
+        Cuenta cuenta1 = new Cuenta(cuentaId1, clienteId1, new BigDecimal("500.0"));
         banco.registrarCliente(cliente1, cuenta1);
 
         // Inicializar la interfaz gráfica

@@ -1,4 +1,6 @@
 package pruebasisw.pruebas;
+import java.math.BigDecimal;
+
 import org.junit.Assert;
 import org.junit.Test;
 import pruebasisw.Banco;
@@ -11,7 +13,7 @@ public class BancoTest {
         // Configuración del escenario
         Banco banco = new Banco();
         Cliente cliente = new Cliente(1, "Juan Pérez", "12345");
-        Cuenta cuenta = new Cuenta(101, 1, 5000.0);
+        Cuenta cuenta = new Cuenta(101, 1, new BigDecimal("5000.0"));
 
         // Ejecución del método
         banco.registrarCliente(cliente, cuenta);
@@ -58,7 +60,7 @@ public class BancoTest {
         // Configuración del escenario
         Banco banco = new Banco();
         Cliente cliente = new Cliente(1, "Juan Perez", "password123");
-        Cuenta cuenta = new Cuenta(1, 1, 1000.0);
+        Cuenta cuenta = new Cuenta(1, 1, new BigDecimal("1000.0"));
         banco.registrarCliente(cliente, cuenta);
 
         // Caso 1: Cliente eliminado exitosamente con contraseña correcta
