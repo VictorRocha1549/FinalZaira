@@ -136,16 +136,22 @@ public class Interfaz extends JFrame {
     private void realizarDeposito() {
         String numeroClienteStr = campoNumeroCliente.getText();
         String montoStr = campoMonto.getText();
-
+    
         if (numeroClienteStr.isEmpty() || montoStr.isEmpty()) {
             areaResultados.setText("Por favor ingrese el número de cliente y el monto.");
             return;
         }
-
+    
         try {
             int numeroCliente = Integer.parseInt(numeroClienteStr);
-            BigDecimal monto =new BigDecimal(montoStr.replaceAll(",", ""));
-
+            BigDecimal monto = new BigDecimal(montoStr.replaceAll(",", ""));
+    
+            // Validación de monto positivo
+            if (monto.compareTo(BigDecimal.ZERO) <= 0) {
+                areaResultados.setText("Error, necesitas depositar un valor valido positivo.");
+                return;
+            }
+    
             Cuenta cuenta = banco.obtenerCuenta(numeroCliente);
             if (cuenta != null) {
                 cuenta.depositar(monto);
@@ -195,54 +201,60 @@ public class Interfaz extends JFrame {
         JDialog registroDialog = new JDialog(this, "Registro de Cliente", true);
         registroDialog.setSize(300, 250);
         registroDialog.setLayout(null);
-
+    
         JLabel etiquetaNombre = new JLabel("Nombre:");
         etiquetaNombre.setBounds(30, 30, 80, 25);
         registroDialog.add(etiquetaNombre);
-
+    
         JTextField campoNombre = new JTextField();
         campoNombre.setBounds(120, 30, 150, 25);
         registroDialog.add(campoNombre);
-
+    
         JLabel etiquetaContrasena = new JLabel("Contraseña:");
         etiquetaContrasena.setBounds(30, 70, 80, 25);
         registroDialog.add(etiquetaContrasena);
-
+    
         JPasswordField campoContrasena = new JPasswordField();
         campoContrasena.setBounds(120, 70, 150, 25);
         registroDialog.add(campoContrasena);
-
+    
         JTextArea areaResultadoRegistro = new JTextArea();
         areaResultadoRegistro.setBounds(30, 150, 240, 50);
         areaResultadoRegistro.setEditable(false);
         registroDialog.add(areaResultadoRegistro);
-
+    
         JButton botonRegistrar = new JButton("Registrar");
         botonRegistrar.setBounds(30, 110, 240, 25);
         registroDialog.add(botonRegistrar);
-
+    
         // Acción del botón de registro
         botonRegistrar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String nombre = campoNombre.getText();
                 String contrasena = new String(campoContrasena.getPassword());
-
+    
                 if (nombre.isEmpty() || contrasena.isEmpty()) {
                     areaResultadoRegistro.setText("Por favor ingrese el nombre y la contraseña.");
                     return;
                 }
-
+    
+                // Validar que el nombre no tenga caracteres especiales
+                if (!nombre.matches("[a-zA-Z0-9 ]+")) {
+                    areaResultadoRegistro.setText("El nombre no puede contener caracteres especiales.");
+                    return;
+                }
+    
                 int nuevoIdCliente = banco.generarNuevoIdCliente();
                 Cliente nuevoCliente = new Cliente(nuevoIdCliente, nombre, contrasena);
                 int nuevoIdCuenta = banco.generarNuevoIdCuenta();
                 Cuenta nuevaCuenta = new Cuenta(nuevoIdCuenta, nuevoIdCliente, new BigDecimal("0.0"));
-
+    
                 banco.registrarCliente(nuevoCliente, nuevaCuenta);
                 areaResultadoRegistro.setText("Cliente registrado con ID: " + nuevoIdCliente);
             }
         });
-
+    
         registroDialog.setVisible(true);
     }
 
