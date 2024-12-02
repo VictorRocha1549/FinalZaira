@@ -11,9 +11,13 @@ public class Interfaz extends JFrame {
     private JPasswordField campoContrasena;
     private JTextField campoMonto;
     private JTextArea areaResultados;
+    private Cliente clienteAutenticado;
 
     public Interfaz() {
         banco = new Banco();
+        clienteAutenticado = null; // Inicialmente no hay cliente autenticado
+
+
         
         // Inicializando la interfaz gráfica
         setTitle("Sistema Bancario");
@@ -70,13 +74,13 @@ public class Interfaz extends JFrame {
         areaResultados.setEditable(false);
         add(areaResultados);
         
-        // Acción para autenticar
         botonAutenticar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                autenticarCliente();
+                autenticarCliente();  // Llamamos al método de autenticación
             }
         });
+        
         
         // Acción para registro
         botonRegistro.addActionListener(new ActionListener() {
@@ -122,27 +126,31 @@ public class Interfaz extends JFrame {
 
         try {
             int numeroCliente = Integer.parseInt(numeroClienteStr);
-            Cliente cliente = banco.autenticar(numeroCliente, contrasena);
-            if (cliente != null) {
-                areaResultados.setText("Cliente autenticado: " + cliente.getNombre());
+            clienteAutenticado = banco.autenticar(numeroCliente, contrasena); // Autenticar cliente
+
+            if (clienteAutenticado != null) {
+                areaResultados.setText("Cliente autenticado: " + clienteAutenticado.getNombre());
             } else {
                 areaResultados.setText("Credenciales incorrectas.");
             }
+
         } catch (NumberFormatException e) {
             areaResultados.setText("Número de cliente inválido.");
         }
     }
 
     private void realizarDeposito() {
-        String numeroClienteStr = campoNumeroCliente.getText();
-        String montoStr = campoMonto.getText();
-    
-        if (numeroClienteStr.isEmpty() || montoStr.isEmpty()) {
-            areaResultados.setText("Por favor ingrese el número de cliente y el monto.");
+        if (clienteAutenticado == null) { // Verifica si el cliente no está autenticado
+            areaResultados.setText("Debe autenticar primero.");
             return;
         }
     
+        // Código para obtener el monto y el número de cliente
+        String numeroClienteStr = campoNumeroCliente.getText();
+        String montoStr = campoMonto.getText();
+    
         try {
+
             // Eliminar comas u otros caracteres no numéricos antes de la conversión
             montoStr = montoStr.replaceAll(",", "").trim();
     
@@ -159,51 +167,55 @@ public class Interfaz extends JFrame {
                 areaResultados.setText("El monto debe ser positivo.");
                 return;
             }
+
     
-            Cuenta cuenta = banco.obtenerCuenta(numeroCliente);
-            if (cuenta != null) {
-                cuenta.depositar(monto);
-                areaResultados.setText("Depósito exitoso. Nuevo saldo: " + cuenta.getSaldo());
+            if (exito) {
+                // Obtener la cuenta actualizada del cliente autenticado
+                Cuenta cuenta = banco.obtenerCuenta(clienteAutenticado.getNumeroCliente());
+                BigDecimal saldoActual = cuenta.getSaldo(); // Obtener el saldo actualizado
+    
+                // Mostrar el saldo actualizado después de realizar el depósito
+                areaResultados.setText("Depósito realizado. Saldo actual: " + saldoActual);
             } else {
-                areaResultados.setText("Cuenta no encontrada.");
+                areaResultados.setText("Operación fallida. Verifique el monto o la cuenta.");
             }
+    
         } catch (NumberFormatException e) {
+
             areaResultados.setText("Por favor ingrese valores numéricos válidos.");
         }
     }
-    
 
     private void realizarRetiro() {
-        String numeroClienteStr = campoNumeroCliente.getText();
-        String montoStr = campoMonto.getText();
-
-        if (numeroClienteStr.isEmpty() || montoStr.isEmpty()) {
-            areaResultados.setText("Por favor ingrese el número de cliente y el monto.");
+        if (clienteAutenticado == null) { // Verifica si el cliente no está autenticado
+            areaResultados.setText("Debe autenticar primero.");
             return;
         }
-
+    
+        // Código para obtener el número de cliente y el monto
+        String numeroClienteStr = campoNumeroCliente.getText();
+        String montoStr = campoMonto.getText();
+    
         try {
-            int numeroCliente = Integer.parseInt(numeroClienteStr);
-            BigDecimal monto =new BigDecimal(montoStr.replaceAll(",", ""));
-
-            Cuenta cuenta = banco.obtenerCuenta(numeroCliente);
-            if (cuenta != null) {
-                if (cuenta.retirar(monto)) {
-                    areaResultados.setText("Retiro exitoso. Nuevo saldo: " + cuenta.getSaldo());
-                } else if(monto.compareTo(cuenta.getSaldo())>0){
-                    areaResultados.setText("Saldo insuficiente.");
-                }else if(monto.compareTo(BigDecimal.ZERO)<0){
-                    areaResultados.setText("El monto debe de ser positivo");
-                }else{
-                    areaResultados.setText("Favor de ingresar un monto a retirar");
-                }
+            int numeroCliente = Integer.parseInt(numeroClienteStr); 
+            double monto = Double.parseDouble(montoStr); 
+            boolean exito = banco.realizarRetiro(numeroCliente, monto); 
+    
+            if (exito) {
+                Cuenta cuenta = banco.obtenerCuenta(clienteAutenticado.getNumeroCliente());
+                BigDecimal saldoActual = cuenta.getSaldo(); 
+    
+                areaResultados.setText("Retiro realizado. Saldo actual: " + saldoActual);
             } else {
-                areaResultados.setText("Cuenta no encontrada.");
+                areaResultados.setText("Operación fallida. Verifique el monto o la cuenta.");
             }
+    
         } catch (NumberFormatException e) {
-            areaResultados.setText("Monto inválido.");
+            areaResultados.setText("Por favor ingrese un monto válido.");
         }
     }
+    
+
 
     // Método para abrir el diálogo de registro
     private void abrirVentanaRegistro() {

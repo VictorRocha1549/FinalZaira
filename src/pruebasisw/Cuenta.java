@@ -25,17 +25,21 @@ public class Cuenta {
         return saldo;
     }
 
-    public void depositar(BigDecimal cantidad) {
-        if (cantidad.compareTo(BigDecimal.ZERO) > 0) {
-            saldo = saldo.add(cantidad);
-        }
+// Método para depositar una cantidad en la cuenta
+public void depositar(double monto) {
+    if (monto > 0) { // Verificamos que el monto sea mayor que cero
+        saldo = saldo.add(BigDecimal.valueOf(monto)); // Suma la cantidad al saldo actual
     }
+}
 
+
+
+    // Método para retirar una cantidad de la cuenta
     public boolean retirar(BigDecimal cantidad) {
         if (cantidad.compareTo(BigDecimal.ZERO) > 0 && cantidad.compareTo(saldo) <= 0) {
-            saldo = saldo.subtract(cantidad);
-            return true;
+            saldo = saldo.subtract(cantidad); // Resta la cantidad al saldo actual
+            return true; // Retiro exitoso
         }
-        return false;
+        return false; // Retiro fallido si no hay suficiente saldo o la cantidad es inválida
     }
 }

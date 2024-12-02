@@ -19,6 +19,11 @@ public class Cliente {
         return nombre;
     }
 
+    public String getContrasena() {
+        return contrasena;
+    }
+    
+
     public boolean verificarContrasena(String contrasena) {
         return this.contrasena.equals(contrasena);
     }
