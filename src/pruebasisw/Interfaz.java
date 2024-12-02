@@ -138,51 +138,39 @@ public class Interfaz extends JFrame {
             areaResultados.setText("Número de cliente inválido.");
         }
     }
+
     private void realizarDeposito() {
         if (clienteAutenticado == null) { // Verifica si el cliente no está autenticado
             areaResultados.setText("Debe autenticar primero.");
             return;
         }
     
+        // Código para obtener el monto y el número de cliente
+        String numeroClienteStr = campoNumeroCliente.getText();
         String montoStr = campoMonto.getText();
     
-        if (montoStr.isEmpty()) {
-            areaResultados.setText("Por favor ingrese el monto.");
-            return;
-        }
-    
         try {
-
-            montoStr = montoStr.replaceAll(",", "").trim();
+            double monto = Double.parseDouble(montoStr); // Extrae el monto
     
-            // Validar que el monto es un número válido
-            if (!montoStr.matches("\\d+(\\.\\d{1,2})?")) {
-                areaResultados.setText("Por favor ingrese un monto válido, sin caracteres no numéricos.");
-                return;
-            }
+            // Llamada al método de depósito usando el número de cliente
+            boolean exito = banco.realizarDeposito(clienteAutenticado.getNumeroCliente(), monto); // Pasa el número de cliente, no el objeto
     
-            BigDecimal monto = new BigDecimal(montoStr);
+            if (exito) {
+                // Obtener la cuenta actualizada del cliente autenticado
+                Cuenta cuenta = banco.obtenerCuenta(clienteAutenticado.getNumeroCliente());
+                BigDecimal saldoActual = cuenta.getSaldo(); // Obtener el saldo actualizado
     
-            if (monto.compareTo(BigDecimal.ZERO) <= 0) {
-                areaResultados.setText("El monto debe ser positivo.");
-                return;
-            }
-
-    
-            Cuenta cuenta = banco.obtenerCuenta(clienteAutenticado.getNumeroCliente());
-    
-            if (cuenta != null) {
-                cuenta.depositar(monto);
-                areaResultados.setText("Depósito exitoso. Nuevo saldo: " + cuenta.getSaldo());
+                // Mostrar el saldo actualizado después de realizar el depósito
+                areaResultados.setText("Depósito realizado. Saldo actual: " + saldoActual);
             } else {
-                areaResultados.setText("Cuenta no encontrada.");
+                areaResultados.setText("Operación fallida. Verifique el monto o la cuenta.");
             }
+    
         } catch (NumberFormatException e) {
-            areaResultados.setText("Por favor ingrese valores numéricos válidos.");
+            areaResultados.setText("Por favor ingrese un monto válido.");
         }
     }
     
-
     private void realizarRetiro() {
         if (clienteAutenticado == null) { // Verifica si el cliente no está autenticado
             areaResultados.setText("Debe autenticar primero.");
