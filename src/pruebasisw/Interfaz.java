@@ -143,12 +143,20 @@ public class Interfaz extends JFrame {
         }
     
         try {
-            int numeroCliente = Integer.parseInt(numeroClienteStr);
-            BigDecimal monto = new BigDecimal(montoStr.replaceAll(",", ""));
+            // Eliminar comas u otros caracteres no numéricos antes de la conversión
+            montoStr = montoStr.replaceAll(",", "").trim();
     
-            // Validación de monto positivo
+            // Validar si el string contiene caracteres no numéricos
+            if (!montoStr.matches("\\d+(\\.\\d{1,2})?")) {
+                areaResultados.setText("Por favor ingrese un monto válido, sin caracteres no numéricos.");
+                return;
+            }
+    
+            int numeroCliente = Integer.parseInt(numeroClienteStr);
+            BigDecimal monto = new BigDecimal(montoStr);
+    
             if (monto.compareTo(BigDecimal.ZERO) <= 0) {
-                areaResultados.setText("Error, necesitas depositar un valor valido positivo.");
+                areaResultados.setText("El monto debe ser positivo.");
                 return;
             }
     
@@ -160,9 +168,10 @@ public class Interfaz extends JFrame {
                 areaResultados.setText("Cuenta no encontrada.");
             }
         } catch (NumberFormatException e) {
-            areaResultados.setText("Monto inválido.");
+            areaResultados.setText("Por favor ingrese valores numéricos válidos.");
         }
     }
+    
 
     private void realizarRetiro() {
         String numeroClienteStr = campoNumeroCliente.getText();
