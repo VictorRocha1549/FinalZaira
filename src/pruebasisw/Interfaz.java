@@ -152,6 +152,7 @@ public class Interfaz extends JFrame {
         }
     
         try {
+
             montoStr = montoStr.replaceAll(",", "").trim();
     
             // Validar que el monto es un número válido
@@ -166,6 +167,7 @@ public class Interfaz extends JFrame {
                 areaResultados.setText("El monto debe ser positivo.");
                 return;
             }
+
     
             Cuenta cuenta = banco.obtenerCuenta(clienteAutenticado.getNumeroCliente());
     
@@ -180,9 +182,6 @@ public class Interfaz extends JFrame {
         }
     }
     
-    
-    
-
 
     private void realizarRetiro() {
         if (clienteAutenticado == null) { // Verifica si el cliente no está autenticado
