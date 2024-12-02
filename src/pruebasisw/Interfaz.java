@@ -147,7 +147,7 @@ public class Interfaz extends JFrame {
     
         // Código para obtener el monto y el número de cliente
         String numeroClienteStr = campoNumeroCliente.getText();
-        String montoStr = campoMonto.getText();
+        String montoStr = campoMonto.getText().replaceAll(",", "");
     
         try {
             double monto = Double.parseDouble(montoStr); // Extrae el monto
@@ -179,7 +179,7 @@ public class Interfaz extends JFrame {
     
         // Código para obtener el número de cliente y el monto
         String numeroClienteStr = campoNumeroCliente.getText();
-        String montoStr = campoMonto.getText();
+        String montoStr = campoMonto.getText().replaceAll(",", "");
     
         try {
             int numeroCliente = Integer.parseInt(numeroClienteStr); 
