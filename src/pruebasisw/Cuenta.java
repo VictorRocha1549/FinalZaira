@@ -26,9 +26,9 @@ public class Cuenta {
     }
 
 // Método para depositar una cantidad en la cuenta
-public void depositar(BigDecimal monto) {
-    if (monto.compareTo(BigDecimal.ZERO) > 0) { // Verificamos que el monto sea mayor que cero
-        saldo = saldo.add(monto); // Suma la cantidad al saldo actual
+public void depositar(double monto) {
+    if (monto > 0) { // Verificamos que el monto sea mayor que cero
+        saldo = saldo.add(BigDecimal.valueOf(monto)); // Suma la cantidad al saldo actual
     }
 }
 
