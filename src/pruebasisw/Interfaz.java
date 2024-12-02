@@ -150,10 +150,24 @@ public class Interfaz extends JFrame {
         String montoStr = campoMonto.getText();
     
         try {
-            double monto = Double.parseDouble(montoStr); // Extrae el monto
+
+            // Eliminar comas u otros caracteres no numéricos antes de la conversión
+            montoStr = montoStr.replaceAll(",", "").trim();
     
-            // Llamada al método de depósito usando el número de cliente
-            boolean exito = banco.realizarDeposito(clienteAutenticado.getNumeroCliente(), monto); // Pasa el número de cliente, no el objeto
+            // Validar si el string contiene caracteres no numéricos
+            if (!montoStr.matches("\\d+(\\.\\d{1,2})?")) {
+                areaResultados.setText("Por favor ingrese un monto válido, sin caracteres no numéricos.");
+                return;
+            }
+    
+            int numeroCliente = Integer.parseInt(numeroClienteStr);
+            BigDecimal monto = new BigDecimal(montoStr);
+    
+            if (monto.compareTo(BigDecimal.ZERO) <= 0) {
+                areaResultados.setText("El monto debe ser positivo.");
+                return;
+            }
+
     
             if (exito) {
                 // Obtener la cuenta actualizada del cliente autenticado
@@ -167,10 +181,11 @@ public class Interfaz extends JFrame {
             }
     
         } catch (NumberFormatException e) {
-            areaResultados.setText("Por favor ingrese un monto válido.");
+
+            areaResultados.setText("Por favor ingrese valores numéricos válidos.");
         }
     }
-    
+
     private void realizarRetiro() {
         if (clienteAutenticado == null) { // Verifica si el cliente no está autenticado
             areaResultados.setText("Debe autenticar primero.");
